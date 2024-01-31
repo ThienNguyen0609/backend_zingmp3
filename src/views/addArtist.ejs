@@ -14,24 +14,18 @@
         </div>
         <h1>ADD ARTIST TO DATABASE</h1>
         <div class="mt-3">
-            <form action="/spotify/get/artist" method="POST">
-                <!-- <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="form-label">Song name</label>
-                        <input type="text" class="form-control" name="name">
-                      </div>
-                      <div class="col-6">
-                        <label class="form-label">Actor</label>
-                        <input type="text" class="form-control" name="actor">
-                    </div>
-                </div> -->
+            <form action="/artists/add" method="POST">
                 <div class="mb-3 col-12">
-                    <label class="form-label">Token</label>
-                    <input type="text" class="form-control" name="token">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name">
                 </div>
                 <div class="mb-3 col-12">
-                    <label class="form-label">Artist spotify id</label>
-                    <input type="text" class="form-control" name="spotifyId">
+                    <label class="form-label">Fake name</label>
+                    <input type="text" class="form-control" name="fakename">
+                </div>
+                <div class="mb-3 col-12">
+                    <label class="form-label">Image</label>
+                    <input type="text" class="form-control" name="image">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <a href="/spotify/get/token" class="btn btn-primary">Get Token</a>

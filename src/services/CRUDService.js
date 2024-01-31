@@ -1,4 +1,4 @@
-import { Users, Songs, Artists } from '../models';
+import { Users, Songs, Artists, SongCategories } from '../models';
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
 
@@ -134,6 +134,10 @@ const getAllSong = () => {
     return new Promise(async (resolve, reject)=> {
         try {
             const listSong = await Songs.findAll({
+                include: {
+                    model: SongCategories,
+                    attributes: ["category"]
+                },
                 raw: true
             })
             resolve(listSong)
@@ -153,7 +157,9 @@ const addNewSong = (data) => {
                     name: data.name,
                     src: data.audiosrc,
                     actor: data.actor,
-                    image: data.imagesrc
+                    image: data.imagesrc,
+                    classify: data.classify,
+                    video: !data.videosrc ? null : data.videosrc
                 }
                 await Songs.create(newSong)
                 message = "ok"
@@ -230,10 +236,38 @@ const getAllArtists = () => {
     })
 }
 
+const addNewArtists = (artist) => {
+    return new Promise(async (resolve, reject)=>{
+        try{
+            let message
+            const check = await Artists.findOne({
+                where: {
+                    name: artist.name,
+                    fakeName: artist.fakename
+                }
+            })
+            if(!check) {
+                await Artists.create({
+                    name: artist.name,
+                    fakeName: artist.fakename,
+                    image: artist.image
+                })
+
+                message="Add success!"
+            }
+            else message="Artist has already exist in system!"
+            resolve(message)
+        }
+        catch(err){
+            reject(err)
+        }
+    })
+}
+
 export {
     getAllUsers, getUserById,
     updateUser, deleteUser, createNewUser,
     getAllSong, addNewSong,
     getSongById, updateSong,
-    getAllArtists
+    getAllArtists, addNewArtists
 }

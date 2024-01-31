@@ -71,14 +71,31 @@
                         <input type="text" class="form-control" name="actor">
                     </div>
                 </div>
-                <div class="mb-3 col-12">
-                    <label class="form-label">Src</label>
-                    <input type="text" class="form-control" name="audiosrc">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label class="form-label">Audio Src</label>
+                        <input type="text" class="form-control" name="audiosrc">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Image src</label>
+                        <input type="text" class="form-control" name="imagesrc">
+                    </div>
                 </div>
-                <div class="mb-3 col-12">
-                    <label class="form-label">Image src</label>
-                    <input type="text" class="form-control" name="imagesrc">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label class="form-label">Video Src</label>
+                        <input type="text" class="form-control" name="videosrc">
+                    </div>
+                      <div class="col-6">
+                        <label class="form-label">Classify</label>
+                        <select name="classify" class="form-select">
+                            <option value="BASIC">BASIC</option>
+                            <option value="PREMIUM">PREMIUM</option>
+                        </select>
+                    </div>
                 </div>
+                
+                
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-xacnhan">Cancel</button>
             </form>

@@ -1,5 +1,9 @@
-import { Users } from '../models';
+import { Categories, SongCategories, Songs, Users } from '../models';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { createJWT } from '../middleware/JWTAction';
+
+const secretKey = "Za0wRnhF4aL538R5nmK9HMBB83P1i9Ty";
 const salt = bcrypt.genSaltSync(10);
 
 const hashUserPassword = (password) => {
@@ -22,7 +26,7 @@ const handleUserRegister = (data) => {
                 const hashPasswordFromBcrypt = await hashUserPassword(data.password)
                 const isExist = await checkUsername(data.username)
                 if(isExist) {
-                    userData.errorCode = 1
+                    userData.status = 400
                     userData.message = "Username has already exist"
                 }
                 else {
@@ -35,14 +39,14 @@ const handleUserRegister = (data) => {
                     }
                     await Users.create(newUser)
 
-                    userData.errorCode = 0
+                    userData.status = 200
                     userData.message = "Create success!"
                     delete newUser.password
                     userData.data = newUser
                 }
             }
             else {
-                userData.errorCode = 3
+                userData.status = 400
                 userData.message = "Your password is not same"
             }
             resolve(userData)
@@ -61,25 +65,39 @@ const handleUserLogin = (userName, password) => {
             if(isExist) {
                 const user = await Users.findOne({
                     where: {
-                        userName: userName
+                        username: userName
                     },
-                    raw: true
+                    raw: true,
+                    include: {
+                        model: Categories,
+                        attributes: ["category"]
+                    }
                 })
+                console.log(user)
                 const isCorrectPassword = bcrypt.compareSync(password, user.password);
                 if(isCorrectPassword) {
-                    userData.errorCode = 0
+                    const token = createJWT({userName: user.username, email: user.email})
+
+                    userData.errorCode = 1
                     userData.message = "Login succeed!"
-                    delete user.password
-                    userData.data = user
+                    userData.accessToken = token
+                    userData.data = {
+                        id: user.id,
+                        name: user.name,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role,
+                        category: user["Category.category"]
+                    }
                 }
                 else {
-                    userData.errorCode = 3
+                    userData.errorCode = 0
                     userData.message = "Your username and password is wrong, try again!"
                     
                 }
             }
             else {
-                userData.errorCode = 2
+                userData.errorCode = 0
                 userData.message = "Your username and password is wrong, try again!"
             }
             resolve(userData)
@@ -107,6 +125,47 @@ const checkUsername = (username) => {
     })
 }
 
+const checkUserPermission = (songId, userId) => {
+    return new Promise(async (resolve, reject)=>{
+        try{
+            let data = {}
+            const songCatId = await Songs.findByPk(songId, {
+                attributes: ["SongCategoryId"],
+                raw: true,
+                include: {
+                    model: SongCategories,
+                    attributes: ["category"]
+                }
+            })
+            const userCatId = await Users.findByPk(userId, {
+                attributes: ["categoryId"],
+                raw: true,
+                include: {
+                    model: Categories,
+                    attributes: ["category"]
+                }
+            })
+            console.log("userCatId:", userCatId.categoryId, "songCatId:", songCatId.SongCategoryId)
+            if(userCatId.categoryId >= songCatId.SongCategoryId) {
+                data.errorCode = 1
+                data.message = "Can play song"
+                data.Song = songCatId
+                data.User = userCatId
+            }
+            else {
+                data.errorCode = 0
+                data.message = "Upgrade your account to play \"PREMIUM\" song"
+                data.Song = songCatId
+                data.User = userCatId
+            }
+            resolve(data)
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
+
 export {
-    handleUserLogin, handleUserRegister
+    handleUserLogin, handleUserRegister, checkUserPermission
 }

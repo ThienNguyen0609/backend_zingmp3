@@ -30,8 +30,8 @@ const Songs = sequelize.define("Songs", {
     image: {
         type: DataTypes.STRING
     },
-    classify: {
-        type: DataTypes.STRING
+    SongCategoryId: {
+        type: DataTypes.NUMBER
     },
     video: {
         type: DataTypes.STRING
@@ -60,12 +60,12 @@ const Users = sequelize.define("User", {
     role: {
         type: DataTypes.STRING
     },
-    member: {
-        type: DataTypes.STRING
+    categoryId: {
+        type: DataTypes.NUMBER
     }
 })
 
-const MyPlaylist = sequelize.define("myPlaylist", {
+const myPlaylist = sequelize.define("myPlaylist", {
     userId: {
         type: DataTypes.NUMBER
     },
@@ -78,12 +78,40 @@ const Artists = sequelize.define("Artists", {
     name: {
         type: DataTypes.STRING
     },
-    spotifyId: {
+    fakeName: {
         type: DataTypes.STRING
     },
-    genres: {
+    image: {
         type: DataTypes.STRING
     }
 })
 
-export { Songs, Users, MyPlaylist, Artists }
+const Categories = sequelize.define("Categories", {
+    category: {
+        type: DataTypes.STRING
+    }
+})
+
+const SongCategories = sequelize.define("SongCategories", {
+    category: {
+        type: DataTypes.STRING
+    }
+})
+
+Users.hasOne(myPlaylist, {
+    foreignKey: myPlaylist.userId
+})
+
+Songs.hasOne(myPlaylist, {
+    foreignKey: myPlaylist.songId
+})
+
+Users.belongsTo(Categories, {
+    foreignKey: Users.categoryId
+})
+
+Songs.belongsTo(SongCategories, {
+    foreignKey: Songs.SongCategoryId
+})
+
+export { Songs, Users, myPlaylist, Artists, Categories, SongCategories }

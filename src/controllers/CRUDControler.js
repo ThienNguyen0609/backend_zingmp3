@@ -1,10 +1,9 @@
-import { Songs } from "../models"
 import {
     createNewUser, updateUser, 
     getAllUsers, getUserById,
     getAllSong, addNewSong,
     getSongById, updateSong,
-    getAllArtists
+    getAllArtists, addNewArtists
 } from "../services/CRUDService"
 
 const getHomePage = async (req, res) => {
@@ -43,6 +42,7 @@ const getCreateSongPage = (req, res) => {
     return res.render("addSong.ejs")
 }
 const postCreateSong = async (req, res) => {
+    console.log(req.body)
     const message = await addNewSong(req.body)
     return res.redirect('/library/music')
 }
@@ -63,11 +63,20 @@ const getArtistPage = async (req, res) => {
     return res.render("artists.ejs", {artists: artists})
 }
 
+const getAddArtistPage = (req, res) => {
+    return res.render("addArtist.ejs")
+}
+
+const postAddArtist = async (req, res) => {
+    const message = await addNewArtists(req.body)
+    return res.redirect("/artists")
+}
+
 export {
-    getHomePage, getLibraryMusic, 
+    getHomePage, getLibraryMusic, getArtistPage,
     getCreateUserPage, postCreateUser,
     getUpdateUserPage, postUpdateUser,
     getCreateSongPage, postCreateSong, 
     getUpdateSongPage, postUpdateSong,
-    getArtistPage
+    getAddArtistPage, postAddArtist
 }

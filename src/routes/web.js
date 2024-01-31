@@ -1,11 +1,11 @@
 import express from 'express'
 import { 
-    getHomePage, getLibraryMusic, 
+    getHomePage, getLibraryMusic, getArtistPage,
     getCreateUserPage, postCreateUser, 
     getUpdateUserPage, postUpdateUser,
     getCreateSongPage, postCreateSong, 
     getUpdateSongPage, postUpdateSong,
-    getArtistPage
+    getAddArtistPage, postAddArtist
 } from '../controllers/CRUDControler'
 const router = express.Router()
 
@@ -25,6 +25,9 @@ const initWebRouter = (app) => {
 
     router.get('/users/update/:id', getUpdateUserPage)
     router.post('/users/update', postUpdateUser)
+
+    router.get('/artists/add', getAddArtistPage)
+    router.post('/artists/add', postAddArtist)
 
     return app.use('/', router)
 }
