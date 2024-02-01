@@ -2,14 +2,6 @@ import { Songs } from "../models"
 import {getUserById, updateUser, deleteUser 
 } from "../services/CRUDService"
 
-import {
-    getAllUsersApi
-} from '../services/apiService'
-
-const getApiAllUser = async (req, res) => {
-    const Users = await getAllUsersApi()
-    return res.status(200).json(Users)
-}
 const getApiUserItem = async (req, res) => {
     const user = await getUserById(req.params.id)
     return res.status(200).json(user)
@@ -54,5 +46,5 @@ const deleteApiUser = async (req, res) => {
 // }
 
 export {
-    getApiAllUser, getApiUserItem, updateApiUser, deleteApiUser
+    getApiUserItem, updateApiUser, deleteApiUser
 }

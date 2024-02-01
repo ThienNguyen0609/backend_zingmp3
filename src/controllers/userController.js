@@ -1,5 +1,11 @@
 import { verifyToken } from "../middleware/JWTAction"
-import { checkUserPermission, handleUserLogin, handleUserRegister } from "../services/userService"
+import { 
+    checkUserPermission, 
+    handleGetUser, 
+    handleUpdateUser, 
+    handleUserLogin, 
+    handleUserRegister 
+} from "../services/userService"
 
 const handleCheckUserPermission = async (req, res) => {
     const songId = req.body.songId
@@ -13,11 +19,11 @@ const handleCheckUserPermission = async (req, res) => {
 const checkAuthority = (req, res, next) => {
     const cookies = req.cookies
     const userId = req.body.userId
-
+    console.log(cookies)
     if(cookies && cookies[`jwt${userId}`]) {
         const token = cookies[`jwt${userId}`]
         const decoded = verifyToken(token)
-
+        console.log(decoded)
         if(decoded) {
             return next()
         }
@@ -70,17 +76,53 @@ const handleLogin = async (req, res) => {
         })
     }
     const data = await handleUserLogin(userName, password)
-    console.log(data)
+
     res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
     return res.status(200).json(data)
 }
 
 const handleRegister = async (req, res) => {
     const message = await handleUserRegister(req.body)
-    if(message.errorCode === 0) return res.status(200).json(message)
+    if(message.errorCode) return res.status(200).json(message)
     else return res.status(500).json(message)
 }
 
+const handleLogout = (req, res) => {
+    try{
+        res.clearCookie(`jwt${req.body.userId}`);
+        return res.status(200).json({
+            errorCode: 0,
+            message: "Logout success!"
+        })
+    }
+    catch {
+        return res.status(500).json({
+            errorCode: 0,
+            message: "Error from server!"
+        })
+    }
+}
+
+const handleGet = async (req, res) => {
+    console.log(req.params.id)
+    const response = await handleGetUser(req.params.id)
+    if(response.errorCode) return res.status(200).json(response)
+    return res.status(500).json(response)
+}
+
+const handleUpdate = async (req, res) => {
+    console.log(req.body)
+    const response = await handleUpdateUser(req.body.user)
+    return res.status(200).json(response)
+}
+
 export {
-    handleLogin, handleRegister, checkAuthority, checkAuthenticated, handleCheckUserPermission
+    handleGet,
+    handleUpdate,
+    handleLogin, 
+    handleLogout,
+    handleRegister, 
+    checkAuthority, 
+    checkAuthenticated, 
+    handleCheckUserPermission
 }

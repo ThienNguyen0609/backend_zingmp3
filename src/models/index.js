@@ -48,7 +48,7 @@ const Users = sequelize.define("User", {
     email: {
         type: DataTypes.STRING
     },
-    city: {
+    Country: {
         type: DataTypes.STRING
     },
     password: {
@@ -62,6 +62,12 @@ const Users = sequelize.define("User", {
     },
     categoryId: {
         type: DataTypes.NUMBER
+    },
+    Gender: {
+        type: DataTypes.STRING
+    },
+    DateOfBirth: {
+        type: DataTypes.DATE
     }
 })
 

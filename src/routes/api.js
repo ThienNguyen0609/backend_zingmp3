@@ -1,12 +1,9 @@
 import express from 'express'
-import { 
-    getApiAllUser, 
-    getApiUserItem, 
-    updateApiUser, 
-    deleteApiUser
-} from '../controllers/controller.api'
 import {
+    handleGet,
+    handleUpdate,
     handleLogin, 
+    handleLogout,
     handleRegister, 
     checkAuthority,
     checkAuthenticated, 
@@ -37,19 +34,13 @@ import {
 const router = express.Router()
 
 const initApiRouter = (app) => {
-    router.get('/users', getApiAllUser)
-    router.get('/users/:id', getApiUserItem)
-    router.put('/users/:id', updateApiUser)
-    router.delete('/users/:id', deleteApiUser)
 
-    // router.get('/songs', getApiAllSong)
-    // router.get('/songs/:id', getApiSongItem)
-    // router.put('/songs/:id', updateApiSong)
-    // router.delete('/songs/:id', deleteApiSong)
-
+    router.get('/user/get/:id', handleGet)
+    router.put('/user/update', checkAuthority, handleUpdate)
     router.post('/user/authenticated', checkAuthenticated)
     router.post('/user/register', handleRegister)
     router.post('/user/login', handleLogin)
+    router.post('/user/logout', handleLogout)
     router.post('/user/permission', checkAuthority, handleCheckUserPermission)
 
     router.get('/library/music', getApiAllSong)

@@ -88,21 +88,16 @@
         <table>
             <thead>
                 <th>STT</th>
-                <th>name</th>
                 <th>username</th>
                 <th>email</th>
-                <th>city</th>
+                <th>country</th>
+                <th>gender</th>
                 <th>action</th>
-                <th>member</th>
-                <th>status</th>
             </thead>
             <% Users.forEach((user, index) => { %>
                 <tr>
                     <td>
                         <%= index+1 %>
-                    </td>
-                    <td>
-                        <%= user.name %>
                     </td>
                     <td>
                         <%= user.username %>
@@ -111,17 +106,14 @@
                         <%= user.email %>
                     </td>
                     <td>
-                        <%= user.city %>
+                        <%= user.Country %>
                     </td>
                     <td>
-                        <a class="btn btn-dark" href="/users/update/<%=user.id%>">Edit</a>
+                        <%= user.Gender %>
+                    </td>
+                    <td>
+                        <a class="btn btn-dark" href="/user/update/<%=user.id%>">Edit</a>
                         <button class="btn btn-dark btnDelete" data-id="<%=user.id%>">Delete</button>
-                    </td>
-                    <td>
-                        <%= user.member %>
-                    </td>
-                    <td class="status-color">
-                        <%= user.status %>
                     </td>
                 </tr>
                 <% }); %>

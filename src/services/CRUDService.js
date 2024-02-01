@@ -82,8 +82,8 @@ const getUserById = (userId) => {
                 },
                 raw: true
             })
-            // delete user.password
-            console.log(user)
+            delete user.password
+            console.log("user: ",user)
             resolve(user)
         }
         catch {
@@ -99,8 +99,9 @@ const updateUser = (data) => {
                 name: data.name,
                 username: data.username,
                 email: data.emailaddress,
-                city: data.city,
-                password: data.password
+                Country: data.country,
+                Gender: data.gender,
+                DateOfBirth: data.dateofbirth
             }
             await Users.update(userUpdated, {
                 where: {

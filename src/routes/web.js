@@ -23,8 +23,8 @@ const initWebRouter = (app) => {
     router.get('/users/create', getCreateUserPage)
     router.post('/users/create', postCreateUser)
 
-    router.get('/users/update/:id', getUpdateUserPage)
-    router.post('/users/update', postUpdateUser)
+    router.get('/user/update/:id', getUpdateUserPage)
+    router.post('/user/update', postUpdateUser)
 
     router.get('/artists/add', getAddArtistPage)
     router.post('/artists/add', postAddArtist)

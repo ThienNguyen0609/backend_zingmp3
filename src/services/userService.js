@@ -1,6 +1,5 @@
 import { Categories, SongCategories, Songs, Users } from '../models';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { createJWT } from '../middleware/JWTAction';
 
 const secretKey = "Za0wRnhF4aL538R5nmK9HMBB83P1i9Ty";
@@ -18,35 +17,96 @@ const hashUserPassword = (password) => {
     })
 }
 
+const handleGetUser = async (userId) => {
+    return new Promise(async (resolve, reject)=>{
+        try {
+            let data = {}
+            const user = await Users.findByPk(userId, {
+                raw: true
+            })
+            if(user) {
+                data.errorCode = 1
+                data.message = "Get user success!"
+                data.user = {
+                    id: user.id,
+                    name: user.name,
+                    username: user.username,
+                    email: user.email,
+                    role: user.role,
+                    category: {
+                        categoryId: user.categoryId,
+                        type: user["Category.category"]
+                    },
+                    dateofbirth: user.DateOfBirth,
+                    gender: user.Gender,
+                    country: user.Country
+                }
+            }
+            else {
+                data.errorCode = 0
+                data.message = "Can't not get user"
+                data.user = {}
+            }
+            resolve(data)
+        }
+        catch {
+            reject(new Error("Can't get users database"))
+        }
+    })
+}
+
+const handleUpdateUser = async (user) => {
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const userUpdated = {
+                email: user.email,
+                Country: user.country,
+                Gender: user.gender,
+                DateOfBirth: user.dateofbirth
+            }
+            await Users.update(userUpdated, {
+                where: {
+                    id: user.id
+                }
+            })
+
+            resolve({
+                errorCode: 1,
+                message: "Update completed!"
+            })
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
 const handleUserRegister = (data) => {
     return new Promise(async (resolve, reject)=>{
         try {
             let userData = {}
-            if(data.password === data.confirmPassword) {
-                const hashPasswordFromBcrypt = await hashUserPassword(data.password)
-                const isExist = await checkUsername(data.username)
+            if(data.Password === data.ConfirmPassword) {
+                const hashPasswordFromBcrypt = await hashUserPassword(data.Password)
+                const isExist = await checkUsername(data.UserName)
                 if(isExist) {
-                    userData.status = 400
+                    userData.errorCode = 0
                     userData.message = "Username has already exist"
                 }
                 else {
                     const newUser = {
-                        name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        city: data.city,
+                        name: data.Name,
+                        username: data.UserName,
+                        email: data.Email,
                         password: hashPasswordFromBcrypt
                     }
                     await Users.create(newUser)
 
-                    userData.status = 200
-                    userData.message = "Create success!"
-                    delete newUser.password
-                    userData.data = newUser
+                    userData.errorCode = 1
+                    userData.message = "Create success! login now"
                 }
             }
             else {
-                userData.status = 400
+                userData.errorCode = 0
                 userData.message = "Your password is not same"
             }
             resolve(userData)
@@ -87,7 +147,13 @@ const handleUserLogin = (userName, password) => {
                         username: user.username,
                         email: user.email,
                         role: user.role,
-                        category: user["Category.category"]
+                        category: {
+                            categoryId: user.categoryId,
+                            type: user["Category.category"]
+                        },
+                        dateofbirth: user.DateOfBirth,
+                        gender: user.Gender,
+                        country: user.Country
                     }
                 }
                 else {
@@ -167,5 +233,9 @@ const checkUserPermission = (songId, userId) => {
 }
 
 export {
-    handleUserLogin, handleUserRegister, checkUserPermission
+    handleGetUser,
+    handleUpdateUser, 
+    handleUserLogin, 
+    handleUserRegister, 
+    checkUserPermission
 }

@@ -21,10 +21,12 @@ const postCreateUser = async (req, res) => {
 }
 
 const getUpdateUserPage = async (req, res) => {
+    console.log(req.body)
     const user = await getUserById(req.params.id)
     return res.render('updateUser.ejs', {user: user})
 }
 const postUpdateUser = async (req, res) => {
+    console.log("body:",req.body)
     const message = await updateUser(req.body)
     console.log(message)
     return res.redirect('/')
