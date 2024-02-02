@@ -11,14 +11,14 @@ const getMyPlaylist = async (req, res) => {
 }
 
 const addToPlaylist = async (req, res) => {
-    const userId = req.params.userId
-    const songId = req.params.songId
+    const userId = req.body.userId
+    const songId = req.body.songId
     const data = await addSongToPlaylist(userId, songId)
     return res.status(200).json(data)
 }
 const removeFromPlaylist = async (req, res) => {
-    const userId = req.params.userId
-    const songId = req.params.songId
+    const userId = req.body.userId
+    const songId = req.body.songId
     const data = await removeSongFromPlaylist(userId, songId)
     console.log(data)
     return res.status(200).json(data)

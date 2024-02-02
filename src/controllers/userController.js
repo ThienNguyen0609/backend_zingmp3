@@ -2,10 +2,21 @@ import { verifyToken } from "../middleware/JWTAction"
 import { 
     checkUserPermission, 
     handleGetUser, 
+    handleCheckUserByUsernameOrEmail, 
     handleUpdateUser, 
     handleUserLogin, 
-    handleUserRegister 
+    handleUserRegister, 
+    sendMail,
+    createOTP,
+    changeUserPassword
 } from "../services/userService"
+
+const handleChangePassword = async (req, res) => {
+    const {password, usernameOrEmail} = req.body
+    const response = await changeUserPassword(password, usernameOrEmail)
+    if(response.errorCode) return res.status(200).json(response)
+    return res.status(500).json(response)
+}
 
 const handleCheckUserPermission = async (req, res) => {
     const songId = req.body.songId
@@ -13,6 +24,44 @@ const handleCheckUserPermission = async (req, res) => {
 
     const data = await checkUserPermission(songId, userId)
     console.log(data)
+    return res.status(200).json(data)
+}
+
+const handleCheckUser = async (req, res, next) => {
+    console.log(req.body.usernameOrEmail)
+    const {usernameOrEmail} = req.body
+    const response = await handleCheckUserByUsernameOrEmail(usernameOrEmail)
+    if(response.errorCode) {
+        req.body.email = response.email
+        return next()
+    }
+    return res.status(200).json(response)
+}
+
+const handleSendEmail = async (req, res) => {
+    const {email} = req.body
+    const OTP = createOTP()
+    const response = await sendMail(email, OTP)
+    if(response.errorCode) {
+        return res.status(200).send({
+            OTP: OTP,
+            response: response
+        })
+    }
+    return res.status(500).send(response)
+}
+
+const handleVerifyOTP = (req, res) => {
+    const {OTP, OTPSend} = req.body
+    let data = {}
+    if(OTP === OTPSend) {
+        data.errorCode = 1
+        data.message = "success!"
+    }
+    else {
+        data.errorCode = 0
+        data.message = "Wrong OTP, try again"
+    }
     return res.status(200).json(data)
 }
 
@@ -77,7 +126,7 @@ const handleLogin = async (req, res) => {
     }
     const data = await handleUserLogin(userName, password)
 
-    res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
+    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
     return res.status(200).json(data)
 }
 
@@ -118,11 +167,15 @@ const handleUpdate = async (req, res) => {
 
 export {
     handleGet,
+    handleCheckUser,
     handleUpdate,
     handleLogin, 
     handleLogout,
     handleRegister, 
     checkAuthority, 
     checkAuthenticated, 
-    handleCheckUserPermission
+    handleCheckUserPermission,
+    handleSendEmail,
+    handleChangePassword,
+    handleVerifyOTP
 }

@@ -5,6 +5,7 @@ import configCORS from './config/cors'
 import initWebRouter from './routes/web'
 import initApiRouter from './routes/api'
 import cookieParser from 'cookie-parser'
+import nodemailer from 'nodemailer'
 
 const port = process.env.PORT || 6969
 
