@@ -27,7 +27,8 @@ const getArtistInfo = (artistName) => {
                     model: SongCategories,
                     attributes: ["category"]
                 },
-                raw: true
+                raw: true,
+                order: ["id"]
             })
             const checkArtist = await Artists.findOne({
                 where: {

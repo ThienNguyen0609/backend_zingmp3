@@ -1,5 +1,5 @@
 import dbConfig from "../config/db.config";
-import { Sequelize, DataTypes } from "sequelize";
+import { Sequelize, DataTypes, Deferrable } from "sequelize";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
@@ -71,6 +71,17 @@ const Users = sequelize.define("User", {
     }
 })
 
+const Playlists = sequelize.define("Playlists", {
+    userId: {
+        type: DataTypes.NUMBER
+    },
+    namePlaylist: {
+        type: DataTypes.STRING
+    }
+})
+
+const PlaylistSongs = sequelize.define("PlaylistSongs", {})
+
 const myPlaylist = sequelize.define("myPlaylist", {
     userId: {
         type: DataTypes.NUMBER
@@ -108,6 +119,10 @@ Users.hasOne(myPlaylist, {
     foreignKey: myPlaylist.userId
 })
 
+Users.hasOne(Playlists, {
+    foreignKey: Playlists.userId
+})
+
 Songs.hasOne(myPlaylist, {
     foreignKey: myPlaylist.songId
 })
@@ -120,4 +135,7 @@ Songs.belongsTo(SongCategories, {
     foreignKey: Songs.SongCategoryId
 })
 
-export { Songs, Users, myPlaylist, Artists, Categories, SongCategories }
+Songs.belongsToMany(Playlists, { through: PlaylistSongs });
+Playlists.belongsToMany(Songs, { through: PlaylistSongs });
+
+export { Songs, Users, myPlaylist, Artists, Categories, SongCategories, Playlists, PlaylistSongs }

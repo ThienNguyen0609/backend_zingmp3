@@ -297,13 +297,13 @@ const handleUserLogin = (userName, password) => {
                     userData.data = {
                         id: user.id,
                         name: user.name,
-                        username: user.username
+                        username: user.username,
                         // email: user.email,
                         // role: user.role,
-                        // category: {
-                        //     categoryId: user.categoryId,
-                        //     type: user["Category.category"]
-                        // },
+                        category: {
+                            categoryId: user.categoryId,
+                            type: user["Category.category"]
+                        },
                         // dateofbirth: user.DateOfBirth,
                         // gender: user.Gender,
                         // country: user.Country

@@ -134,14 +134,26 @@ const deleteUser = (userId) => {
 const getAllSong = () => {
     return new Promise(async (resolve, reject)=> {
         try {
-            const listSong = await Songs.findAll({
+            let data = {}
+            const songs = await Songs.findAll({
                 include: {
                     model: SongCategories,
                     attributes: ["category"]
                 },
-                raw: true
+                raw: true,
+                order: ['id']
             })
-            resolve(listSong)
+            if(songs) {
+                data.errorCode = 1
+                data.message = "get songs successfully"
+                data.songs = songs
+            }
+            else {
+                data.errorCode = 0
+                data.message = "get songs error"
+                data.songs = []
+            }
+            resolve(data)
         }
         catch(err) {
             reject(err)

@@ -1,29 +1,42 @@
 import {
-    getMyPlaylistById,
+    getPlaylist,
     addSongToPlaylist,
-    removeSongFromPlaylist
+    removeSongFromPlaylist,
+    createPlaylist,
+    getPlaylistSong
 } from '../services/playlistService'
 
-const getMyPlaylist = async (req, res) => {
-    const userId = req.params.id
-    const data = await getMyPlaylistById(userId);
-    return res.send(data)
+const handleCreatePlaylist = async (req, res) => {
+    const response = await createPlaylist(req.body)
+    return res.status(200).json(response)
 }
 
-const addToPlaylist = async (req, res) => {
-    const userId = req.body.userId
-    const songId = req.body.songId
-    const data = await addSongToPlaylist(userId, songId)
+const handleGetPlaylist = async (req, res) => {
+    const userId = req.params.id
+    const response = await getPlaylist(userId);
+    if(!response.errorCode) return res.status(500).json(response)
+    return res.status(200).json(response)
+}
+
+const handleGetPlaylistSong = async (req, res) => {
+    const {playlistId, userId} = req.params
+    const response = await getPlaylistSong(playlistId, userId)
+    if(!response.errorCode) return res.status(500).json(response)
+    return res.status(200).json(response)
+}
+
+const handleAddToPlaylist = async (req, res) => {
+    const {songId, playlistId} = req.body
+    const data = await addSongToPlaylist(playlistId, songId)
     return res.status(200).json(data)
 }
-const removeFromPlaylist = async (req, res) => {
-    const userId = req.body.userId
-    const songId = req.body.songId
-    const data = await removeSongFromPlaylist(userId, songId)
-    console.log(data)
+const handleRemoveFromPlaylist = async (req, res) => {
+    const {songId, playlistId} = req.body
+    const data = await removeSongFromPlaylist(playlistId, songId)
     return res.status(200).json(data)
 }
 
 export {
-    getMyPlaylist, addToPlaylist, removeFromPlaylist
+    handleGetPlaylistSong,
+    handleCreatePlaylist, handleGetPlaylist, handleAddToPlaylist, handleRemoveFromPlaylist
 }

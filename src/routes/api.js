@@ -25,9 +25,11 @@ import {
 } from '../controllers/songController'
 
 import {
-    getMyPlaylist, 
-    addToPlaylist, 
-    removeFromPlaylist
+    handleCreatePlaylist,
+    handleGetPlaylist, 
+    handleGetPlaylistSong,
+    handleAddToPlaylist, 
+    handleRemoveFromPlaylist
 } from '../controllers/playlistController'
 
 import {
@@ -56,9 +58,11 @@ const initApiRouter = (app) => {
     router.get('/library/music/:id', getApiSongItem)
     router.put('/library/music', updateApiSong)
 
-    router.get('/myPlaylist/get/:id', getMyPlaylist)
-    router.post('/myPlaylist/add', addToPlaylist)
-    router.post('/myPlaylist/remove', removeFromPlaylist)
+    router.post('/playlist/create', handleCreatePlaylist)
+    router.get('/playlist/get/:id', handleGetPlaylist)
+    router.get('/playlist/get/item/:playlistId/:userId', handleGetPlaylistSong)
+    router.post('/playlist/add', handleAddToPlaylist)
+    router.post('/playlist/remove', handleRemoveFromPlaylist)
 
     router.post('/search', findApiSong)
     router.post('/search/all', findApiAllSong)
