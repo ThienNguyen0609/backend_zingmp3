@@ -301,7 +301,7 @@ const handleUserLogin = (userName, password) => {
                         // email: user.email,
                         // role: user.role,
                         category: {
-                            categoryId: user.categoryId,
+                            categoryId: user.CategoryId,
                             type: user["Category.category"]
                         },
                         // dateofbirth: user.DateOfBirth,

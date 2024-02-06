@@ -92,22 +92,27 @@ const checkAuthority = (req, res, next) => {
 const checkAuthenticated = (req, res) => {
     const cookies = req.cookies
     const userId = req.body.userId
-
+    console.log(cookies[`jwt${userId}`])
     if(cookies && cookies[`jwt${userId}`]) {
         const token = cookies[`jwt${userId}`]
         const decoded = verifyToken(token)
 
         if(decoded) {
+            console.log("Auth success")
             return res.status(200).json({
                 errorCode: 1,
                 message: "Login success!"
             })
         }
-        else res.status(401).json({
-            errorCode: 0,
-            message: "Invalid Token, please login!"
-        })
+        else {
+            console.log("Auth error")
+            res.status(401).json({
+                errorCode: 0,
+                message: "Invalid Token, please login!"
+            })
+        }
     }
+    console.log("not have cookies")
     return res.status(401).json({
         errorCode: 0,
         message: "Please login before use us service"
@@ -155,8 +160,8 @@ const handleLogout = (req, res) => {
 }
 
 const handleGet = async (req, res) => {
-    console.log(req.params.id)
     const response = await handleGetUser(req.params.id)
+    console.log(response)
     if(response.errorCode) return res.status(200).json(response)
     return res.status(500).json(response)
 }

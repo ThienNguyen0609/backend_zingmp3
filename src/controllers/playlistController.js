@@ -14,6 +14,7 @@ const handleCreatePlaylist = async (req, res) => {
 const handleGetPlaylist = async (req, res) => {
     const userId = req.params.id
     const response = await getPlaylist(userId);
+    console.log(response)
     if(!response.errorCode) return res.status(500).json(response)
     return res.status(200).json(response)
 }
