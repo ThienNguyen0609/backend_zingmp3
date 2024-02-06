@@ -5,7 +5,7 @@ import configCORS from './config/cors'
 import initWebRouter from './routes/web'
 import initApiRouter from './routes/api'
 import cookieParser from 'cookie-parser'
-import nodemailer from 'nodemailer'
+import connectDB from './config/connectDB'
 
 const port = process.env.PORT || 6969
 
@@ -20,6 +20,8 @@ confidViewEngine(app)
 // init web router
 initWebRouter(app)
 initApiRouter(app)
+
+connectDB()
 
 app.listen(port, () => {
     console.log(`Example app listening on http://localhost:${port}/`)

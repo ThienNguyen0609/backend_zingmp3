@@ -1,10 +1,10 @@
 import { Op } from "sequelize"
-import { SongCategories, Songs } from "../models"
+import db from "../models"
 
 const findSong = async (value) => {
     return new Promise(async (resolve, reject)=>{
         try{
-            const songSearched = await Songs.findAll({
+            const songSearched = await db.Songs.findAll({
                 where: {
                     name: {
                         [Op.like]: `%${value}%`
@@ -24,14 +24,14 @@ const findSong = async (value) => {
 const findAllSong = (value) => {
     return new Promise(async (resolve, reject)=>{
         try{
-            const songSearched = await Songs.findAll({
+            const songSearched = await db.Songs.findAll({
                 where: {
                     name: {
                         [Op.like]: `%${value}%`
                     }
                 },
                 include: {
-                    model: SongCategories,
+                    model: db.SongCategories,
                     attributes: ["category"]
                 },
                 raw: true

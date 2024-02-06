@@ -36,8 +36,9 @@ const postUpdateUser = async (req, res) => {
 
 // library music
 const getLibraryMusic = async (req, res) => {
-    const Songs = await getAllSong()
-    return res.render('libraryMusic.ejs', {listSongs: Songs})
+    const response = await getAllSong()
+    console.log(response)
+    return res.render('libraryMusic.ejs', {Songs: response.songs})
 }
 
 const getCreateSongPage = (req, res) => {

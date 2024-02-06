@@ -1,141 +1,66 @@
-import dbConfig from "../config/db.config";
-import { Sequelize, DataTypes, Deferrable } from "sequelize";
+'use strict';
+require('dotenv').config;
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.js')[env];
+const db = {};
 
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    dialect: dbConfig.dialect,
-    operatorsAliases: 0,
-    port: dbConfig.PORT,
-    pool: {
-        max: dbConfig.pool.max,
-        min: dbConfig.pool.min,
-        acquire: dbConfig.pool.acquire,
-        idle: dbConfig.pool.idle
-    },
-    define: {
-        timestamps: false
-    }
-})
+let sequelize;
+// const sequelize = new Sequelize(
+//   process.env.DB_DATABASE_NAME,
+//   process.env.DB_USERNAME,
+//   process.env.DB_PASSWORD,
+//   {
+//       host: process.env.DB_HOST,
+//       port: "5436",
+//       dialect: 'postgres',
+//       logging: false,
+//       dialectOptions:
+//           process.env.DB_SSL === 'true' ?
+//               {
+//                   ssl: {
+//                       require: true,
+//                       rejectUnauthorized: false
+//                   }
+//               } : {}
+//       ,
+//       query: {
+//           "raw": true
+//       },
+//       timezone: "+07:00"
+//   });
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
-const Songs = sequelize.define("Songs", {
-    name: {
-        type: DataTypes.STRING
-    },
-    src: {
-        type: DataTypes.STRING
-    },
-    actor: {
-        type: DataTypes.STRING
-    },
-    image: {
-        type: DataTypes.STRING
-    },
-    SongCategoryId: {
-        type: DataTypes.NUMBER
-    },
-    video: {
-        type: DataTypes.STRING
-    }
-})
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    );
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
 
-const Users = sequelize.define("User", {
-    name: {
-        type: DataTypes.STRING
-    },
-    username: {
-        type: DataTypes.STRING
-    },
-    email: {
-        type: DataTypes.STRING
-    },
-    Country: {
-        type: DataTypes.STRING
-    },
-    password: {
-        type: DataTypes.STRING
-    },
-    status: {
-        type: DataTypes.STRING
-    },
-    role: {
-        type: DataTypes.STRING
-    },
-    categoryId: {
-        type: DataTypes.NUMBER
-    },
-    Gender: {
-        type: DataTypes.STRING
-    },
-    DateOfBirth: {
-        type: DataTypes.DATE
-    }
-})
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-const Playlists = sequelize.define("Playlists", {
-    userId: {
-        type: DataTypes.NUMBER
-    },
-    namePlaylist: {
-        type: DataTypes.STRING
-    }
-})
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-const PlaylistSongs = sequelize.define("PlaylistSongs", {})
-
-const myPlaylist = sequelize.define("myPlaylist", {
-    userId: {
-        type: DataTypes.NUMBER
-    },
-    songId: {
-        type: DataTypes.NUMBER
-    }
-})
-
-const Artists = sequelize.define("Artists", {
-    name: {
-        type: DataTypes.STRING
-    },
-    fakeName: {
-        type: DataTypes.STRING
-    },
-    image: {
-        type: DataTypes.STRING
-    }
-})
-
-const Categories = sequelize.define("Categories", {
-    category: {
-        type: DataTypes.STRING
-    }
-})
-
-const SongCategories = sequelize.define("SongCategories", {
-    category: {
-        type: DataTypes.STRING
-    }
-})
-
-Users.hasOne(myPlaylist, {
-    foreignKey: myPlaylist.userId
-})
-
-Users.hasOne(Playlists, {
-    foreignKey: Playlists.userId
-})
-
-Songs.hasOne(myPlaylist, {
-    foreignKey: myPlaylist.songId
-})
-
-Users.belongsTo(Categories, {
-    foreignKey: Users.categoryId
-})
-
-Songs.belongsTo(SongCategories, {
-    foreignKey: Songs.SongCategoryId
-})
-
-Songs.belongsToMany(Playlists, { through: PlaylistSongs });
-Playlists.belongsToMany(Songs, { through: PlaylistSongs });
-
-export { Songs, Users, myPlaylist, Artists, Categories, SongCategories, Playlists, PlaylistSongs }
+module.exports = db;

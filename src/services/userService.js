@@ -1,5 +1,5 @@
 require('dotenv').config()
-import { Categories, SongCategories, Songs, Users } from '../models';
+import db from '../models';
 import bcrypt from 'bcryptjs';
 import { createJWT } from '../middleware/JWTAction';
 import { Op } from 'sequelize';
@@ -80,7 +80,7 @@ const changeUserPassword = (password, usernameOrEmail) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = {}
-            const user = await Users.findOne({
+            const user = await db.Users.findOne({
                 where: {
                     [Op.or]: [{email: usernameOrEmail}, {username: usernameOrEmail}]
                 },
@@ -89,7 +89,7 @@ const changeUserPassword = (password, usernameOrEmail) => {
 
             if(user) {
                 const hashPasswordFromBcrypt = await hashUserPassword(password)
-                await Users.update({password: hashPasswordFromBcrypt}, {
+                await db.Users.update({password: hashPasswordFromBcrypt}, {
                     where: {
                         id: user.id
                     }
@@ -112,7 +112,7 @@ const changeUserPassword = (password, usernameOrEmail) => {
 const handleCheckUserByUsernameOrEmail = (usernameOrEmail) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const user = await Users.findOne({
+            const user = await db.Users.findOne({
                 attributes: ["email"],
                 where: {
                     [Op.or]: [{email: usernameOrEmail}, {username: usernameOrEmail}]
@@ -140,10 +140,10 @@ const handleGetUser = async (userId) => {
     return new Promise(async (resolve, reject)=>{
         try {
             let data = {}
-            const user = await Users.findByPk(userId, {
+            const user = await db.Users.findByPk(userId, {
                 raw: true,
                 include: {
-                    model: Categories,
+                    model: db.Categories,
                     attributes: ["category"]
                 }
             })
@@ -160,9 +160,9 @@ const handleGetUser = async (userId) => {
                         categoryId: user.categoryId,
                         type: user["Category.category"]
                     },
-                    dateofbirth: user.DateOfBirth,
-                    gender: user.Gender,
-                    country: user.Country
+                    dateofbirth: user.dateofbirth,
+                    gender: user.gender,
+                    country: user.country
                 }
             }
             else {
@@ -184,17 +184,17 @@ const handleUpdateUser = async (userRequest) => {
             let data = {}
             const userUpdated = {
                 email: userRequest.email,
-                Country: userRequest.country,
-                Gender: userRequest.gender,
-                DateOfBirth: userRequest.dateofbirth
+                country: userRequest.country,
+                gender: userRequest.gender,
+                dateofbirth: userRequest.dateofbirth
             }
-            await Users.update(userUpdated, {
+            await db.Users.update(userUpdated, {
                 where: {
                     id: userRequest.id
                 }
             })
 
-            const user = await Users.findByPk(userRequest.id, {
+            const user = await db.Users.findByPk(userRequest.id, {
                 raw: true,
                 include: {
                     model: Categories,
@@ -215,9 +215,9 @@ const handleUpdateUser = async (userRequest) => {
                         categoryId: user.categoryId,
                         type: user["Category.category"]
                     },
-                    dateofbirth: user.DateOfBirth,
-                    gender: user.Gender,
-                    country: user.Country
+                    dateofbirth: user.dateofbirth,
+                    gender: user.gender,
+                    country: user.country
                 }
             }
             else {
@@ -252,7 +252,7 @@ const handleUserRegister = (data) => {
                         email: data.Email,
                         password: hashPasswordFromBcrypt
                     }
-                    await Users.create(newUser)
+                    await db.Users.create(newUser)
 
                     userData.errorCode = 1
                     userData.message = "Create success! login now"
@@ -276,13 +276,13 @@ const handleUserLogin = (userName, password) => {
             let userData = {}
             const isExist = await checkUsername(userName)
             if(isExist) {
-                const user = await Users.findOne({
+                const user = await db.Users.findOne({
                     where: {
                         username: userName
                     },
                     raw: true,
                     include: {
-                        model: Categories,
+                        model: db.Categories,
                         attributes: ["category"]
                     }
                 })
@@ -330,7 +330,7 @@ const handleUserLogin = (userName, password) => {
 const checkUsername = (username) => {
     return new Promise(async (resolve, reject)=> {
         try {
-            const user = await Users.findOne({
+            const user = await db.Users.findOne({
                 where: {
                     username: username
                 }
@@ -348,24 +348,24 @@ const checkUserPermission = (songId, userId) => {
     return new Promise(async (resolve, reject)=>{
         try{
             let data = {}
-            const songCatId = await Songs.findByPk(songId, {
+            const songCatId = await db.Songs.findByPk(songId, {
                 attributes: ["SongCategoryId"],
                 raw: true,
                 include: {
-                    model: SongCategories,
+                    model: db.SongCategories,
                     attributes: ["category"]
                 }
             })
-            const userCatId = await Users.findByPk(userId, {
-                attributes: ["categoryId"],
+            const userCatId = await db.Users.findByPk(userId, {
+                attributes: ["CategoryId"],
                 raw: true,
                 include: {
-                    model: Categories,
+                    model: db.Categories,
                     attributes: ["category"]
-                }
+                } 
             })
-            console.log("userCatId:", userCatId.categoryId, "songCatId:", songCatId.SongCategoryId)
-            if(userCatId.categoryId >= songCatId.SongCategoryId) {
+            console.log("userCatId:", userCatId.CategoryId, "songCatId:", songCatId.SongCategoryId)
+            if(userCatId.CategoryId >= songCatId.SongCategoryId) {
                 data.errorCode = 1
                 data.message = "Can play song"
                 data.Song = songCatId

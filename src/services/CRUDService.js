@@ -1,4 +1,4 @@
-import { Users, Songs, Artists, SongCategories } from '../models';
+import db from '../models/index';
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
 
@@ -17,7 +17,7 @@ const hashUserPassword = (password) => {
 const getAllUsers = () => {
     return new Promise(async (resolve, reject)=>{
         try {
-            const listUsers = await Users.findAll({
+            const users = await db.Users.findAll({
                 // offset: 4,
                 // limit: 4,
                 attributes: {
@@ -25,11 +25,11 @@ const getAllUsers = () => {
                 },
                 raw: true
             })
-            // console.log(listUsers)
-            resolve(listUsers)
+            // console.log(users)
+            resolve(users)
         }
-        catch {
-            reject(new Error("Can't get users database"))
+        catch(err) {
+            reject(err)
         }
     })
 }
@@ -43,11 +43,11 @@ const createNewUser = (data) => {
                 const newUser = {
                     name: data.name,
                     email: data.email,
-                    city: data.city,
+                    country: data.country,
                     password: hashPasswordFromBcrypt,
                     username: data.username,            
                 }
-                await Users.create(newUser)
+                await db.Users.create(newUser)
                 message = "ok"
             }
             else message = "the username has been in system"
@@ -60,7 +60,7 @@ const createNewUser = (data) => {
 const checkUsername = (username) => {
     return new Promise(async (resolve, reject)=> {
         try {
-            const user = await Users.findOne({
+            const user = await db.Users.findOne({
                 where: {
                     username: username
                 }
@@ -76,7 +76,7 @@ const checkUsername = (username) => {
 const getUserById = (userId) => {
     return new Promise(async (resolve, reject)=>{
         try {
-            const user = await Users.findByPk(userId, {
+            const user = await db.Users.findByPk(userId, {
                 attributes: {
                     exclude: ["password"]
                 },
@@ -99,11 +99,11 @@ const updateUser = (data) => {
                 name: data.name,
                 username: data.username,
                 email: data.emailaddress,
-                Country: data.country,
-                Gender: data.gender,
-                DateOfBirth: data.dateofbirth
+                country: data.country,
+                gender: data.gender,
+                dateofbirthf: data.dateofbirth
             }
-            await Users.update(userUpdated, {
+            await db.Users.update(userUpdated, {
                 where: {
                     id: data.id
                 }
@@ -118,7 +118,7 @@ const updateUser = (data) => {
 const deleteUser = (userId) => {
     return new Promise(async (resolve, reject)=> {
         try {
-            await Users.destroy({
+            await db.Users.destroy({
                 where: {
                     id: userId
                 }
@@ -135,9 +135,9 @@ const getAllSong = () => {
     return new Promise(async (resolve, reject)=> {
         try {
             let data = {}
-            const songs = await Songs.findAll({
+            const songs = await db.Songs.findAll({
                 include: {
-                    model: SongCategories,
+                    model: db.SongCategories,
                     attributes: ["category"]
                 },
                 raw: true,
@@ -171,10 +171,10 @@ const addNewSong = (data) => {
                     src: data.audiosrc,
                     actor: data.actor,
                     image: data.imagesrc,
-                    classify: data.classify,
+                    SongCategoryId: data.songcategoryId,
                     video: !data.videosrc ? null : data.videosrc
                 }
-                await Songs.create(newSong)
+                await db.Songs.create(newSong)
                 message = "ok"
             }
             else message = "Song has in system"
@@ -187,7 +187,7 @@ const addNewSong = (data) => {
 }
 const checkSongInSystem = async (name) => {
     try {
-        const song = await Songs.findOne({
+        const song = await db.Songs.findOne({
             where: {
                 name: name
             }
@@ -203,7 +203,7 @@ const checkSongInSystem = async (name) => {
 const getSongById = (id) => {
     return new Promise(async (resolve, reject)=> {
         try {
-            const song = await Songs.findByPk(id, {               
+            const song = await db.Songs.findByPk(id, {               
                 raw: true
             })
             resolve(song)
@@ -222,7 +222,7 @@ const updateSong = (data) => {
                 image: data.imagesrc,
                 classify: data.classify
             }
-            await Songs.update(songUpdated, {
+            await db.Songs.update(songUpdated, {
                 where: {
                     id: data.id
                 }
@@ -238,7 +238,7 @@ const updateSong = (data) => {
 const getAllArtists = () => {
     return new Promise(async (resolve, reject)=>{
         try {
-            const artists = await Artists.findAll({
+            const artists = await db.Artists.findAll({
                 raw: true
             })
             resolve(artists)
@@ -253,14 +253,14 @@ const addNewArtists = (artist) => {
     return new Promise(async (resolve, reject)=>{
         try{
             let message
-            const check = await Artists.findOne({
+            const check = await db.Artists.findOne({
                 where: {
                     name: artist.name,
                     fakeName: artist.fakename
                 }
             })
             if(!check) {
-                await Artists.create({
+                await db.Artists.create({
                     name: artist.name,
                     fakeName: artist.fakename,
                     image: artist.image

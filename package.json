@@ -25,6 +25,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "3.6.1",
     "nodemailer": "^6.9.9",
+    "pg": "8.11.3",
+    "pg-hstore": "2.3.4",
     "query-string": "^8.1.0",
     "sequelize": "6.33.0"
   },
@@ -32,6 +34,7 @@
     "@babel/core": "^7.22.17",
     "@babel/node": "^7.22.15",
     "@babel/preset-env": "^7.22.15",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "sequelize-cli": "^6.6.2"
   }
 }

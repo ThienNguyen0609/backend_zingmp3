@@ -1,4 +1,4 @@
-import { myPlaylist, Playlists, PlaylistSongs, SongCategories, Songs } from "../models"
+import db from "../models"
 import { Op } from "sequelize"
 
 const createPlaylist = (request) => {
@@ -6,7 +6,7 @@ const createPlaylist = (request) => {
         try {
             let data = {}
 
-            const [playlist, created] = await Playlists.findOrCreate({
+            const [playlist, created] = await db.Playlists.findOrCreate({
                 where: {
                     [Op.and] : [{namePlaylist: request.namePlaylist}, {userId: request.userId}]
                 },
@@ -36,9 +36,9 @@ const getPlaylist = async (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = {}
-            const playlist = await Playlists.findAll({
+            const playlist = await db.Playlists.findAll({
                 where: {
-                    userId: userId
+                    UserId: userId
                 },
                 raw: true
             })
@@ -66,16 +66,16 @@ const getPlaylistSong = async (playlistId, userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = {}
-            const songs = await Songs.findAll({
+            const songs = await db.Songs.findAll({
                 include: [
                     {
-                        model: Playlists,
+                        model: db.Playlists,
                         attributes: [],
                         where: {
-                            [Op.and] : [{id: playlistId}, {userId: userId}]
+                            [Op.and] : [{id: playlistId}, {UserId: userId}]
                         }
                     }, {
-                        model: SongCategories,
+                        model: db.SongCategories,
                         attributes: ["category"]
                     }
                 ],
@@ -104,7 +104,7 @@ const addSongToPlaylist = (playlistId, songId) => {
     return new Promise(async (resolve, reject)=>{
         try {
             let data = {}
-            const check = await PlaylistSongs.findOne({
+            const check = await db.PlaylistSongs.findOne({
                 where: {
                     [Op.and]: [{PlaylistId: playlistId}, {SongId: songId}]
                 }
@@ -114,7 +114,7 @@ const addSongToPlaylist = (playlistId, songId) => {
                 data.message = "This song has already exist in this playlist"
             }
             else {
-                await PlaylistSongs.create({
+                await db.PlaylistSongs.create({
                     SongId: songId,
                     PlaylistId: playlistId
                 })
@@ -133,13 +133,13 @@ const removeSongFromPlaylist = (playlistId, songId) => {
     return new Promise(async (resolve, reject)=>{
         try{
             let data = {}
-            const check = await PlaylistSongs.findOne({
+            const check = await db.PlaylistSongs.findOne({
                 where: {
                     [Op.and]: [{PlaylistId: playlistId}, {SongId: songId}]
                 }
             })
             if(check){
-                await PlaylistSongs.destroy({
+                await db.PlaylistSongs.destroy({
                     where: {
                         [Op.and]: [{PlaylistId: playlistId}, {SongId: songId}]
                     }

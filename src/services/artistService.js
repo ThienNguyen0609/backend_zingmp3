@@ -1,10 +1,10 @@
 import { Op } from "sequelize"
-import { Artists, SongCategories, Songs } from "../models"
+import db from "../models"
 
 const getAllArtists = () => {
     return new Promise(async (resolve, reject)=>{
         try{
-            const artists = await Artists.findAll();
+            const artists = await db.Artists.findAll();
             resolve(artists)
         }
         catch(err) {
@@ -17,20 +17,20 @@ const getArtistInfo = (artistName) => {
     return new Promise(async (resolve, reject)=>{
         try{
             let data = {}
-            const checkSong = await Songs.findAll({
+            const checkSong = await db.Songs.findAll({
                 where: {
                     actor: {
                         [Op.like]: `%${artistName}%`
                     }
                 },
                 include: {
-                    model: SongCategories,
+                    model: db.SongCategories,
                     attributes: ["category"]
                 },
                 raw: true,
                 order: ["id"]
             })
-            const checkArtist = await Artists.findOne({
+            const checkArtist = await db.Artists.findOne({
                 where: {
                     name: artistName
                 },

@@ -84,10 +84,10 @@
                 <th>STT</th>
                 <th>name</th>
                 <th>actor</th>
+                <th>category</th>
                 <th>action</th>
-                <th>classify</th>
             </thead>
-            <% listSongs.forEach((item, index) => { %>
+            <% Songs.forEach((item, index) => { %>
                 <tr>
                     <td>
                         <%= index+1 %>
@@ -99,11 +99,11 @@
                         <%= item.actor %>
                     </td>
                     <td>
-                        <a class="btn btn-dark" href="/library/music/update/<%=item.id%>">Edit</a>
-                        <button class="btn btn-dark btnDelete" data-id="<%=item.id%>">Delete</button>
+                        <%= item["SongCategory.category"] %>
                     </td>
                     <td>
-                        <%= item.classify %>
+                        <a class="btn btn-dark" href="/library/music/update/<%=item.id%>">Edit</a>
+                        <button class="btn btn-dark btnDelete" data-id="<%=item.id%>">Delete</button>
                     </td>
                 </tr>
                 <% }); %>
