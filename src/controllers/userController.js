@@ -133,7 +133,10 @@ const handleLogin = async (req, res) => {
 
     console.log(data)
 
-    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
+    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {sameSite : "none",
+    secure: true,
+    domain: "https://frontend-zingmp3.vercel.app",
+    httpOnly: true});
     return res.status(200).json(data)
 }
 
