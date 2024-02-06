@@ -36,7 +36,7 @@
     color: #fff;
 }
 </style>
-<script>
+<!-- <script>
         $(document).ready(function(){
             $(".btn-xacnhan").click(function(){
                 $(".modal-container").removeClass("dp-none")
@@ -45,7 +45,7 @@
                 $(".modal-container").addClass("dp-none")
             })
         })
-</script>
+</script> -->
 <body>
     <div class="container contain">
         <div class="modal-container dp-none">
@@ -87,17 +87,17 @@
                         <input type="text" class="form-control" name="videosrc">
                     </div>
                       <div class="col-6">
-                        <label class="form-label">Classify</label>
-                        <select name="classify" class="form-select">
-                            <option value="BASIC">BASIC</option>
-                            <option value="PREMIUM">PREMIUM</option>
+                        <label class="form-label">Category</label>
+                        <select name="songcategoryId" class="form-select">
+                            <option value="1">BASIC</option>
+                            <option value="2">PREMIUM</option>
                         </select>
                     </div>
                 </div>
                 
                 
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-xacnhan">Cancel</button>
+                <!-- <button type="button" class="btn btn-xacnhan">Cancel</button> -->
             </form>
             
         </div>

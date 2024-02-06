@@ -8,10 +8,10 @@ const createPlaylist = (request) => {
 
             const [playlist, created] = await db.Playlists.findOrCreate({
                 where: {
-                    [Op.and] : [{namePlaylist: request.namePlaylist}, {userId: request.userId}]
+                    [Op.and] : [{namePlaylist: request.namePlaylist}, {UserId: request.userId}]
                 },
                 defaults: {
-                    userId: request.userId,
+                    UserId: request.userId,
                     namePlaylist: request.namePlaylist
                 }
             })

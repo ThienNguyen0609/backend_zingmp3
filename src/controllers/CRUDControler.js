@@ -3,6 +3,7 @@ import {
     getAllUsers, getUserById,
     getAllSong, addNewSong,
     getSongById, updateSong,
+    deleteSong,
     getAllArtists, addNewArtists
 } from "../services/CRUDService"
 
@@ -37,7 +38,6 @@ const postUpdateUser = async (req, res) => {
 // library music
 const getLibraryMusic = async (req, res) => {
     const response = await getAllSong()
-    console.log(response)
     return res.render('libraryMusic.ejs', {Songs: response.songs})
 }
 
@@ -45,17 +45,21 @@ const getCreateSongPage = (req, res) => {
     return res.render("addSong.ejs")
 }
 const postCreateSong = async (req, res) => {
-    console.log(req.body)
     const message = await addNewSong(req.body)
     return res.redirect('/library/music')
 }
 const getUpdateSongPage = async (req, res) => {
     const song = await getSongById(req.params.id)
-    // console.log(song)
     return res.render("updateSong.ejs", {song: song})
 }
 const postUpdateSong = async (req, res) => {
     const message = await updateSong(req.body)
+    return res.redirect("/library/music")
+}
+
+const handleDeleteSong = async (req, res) => {
+    const {songId} = req.params
+    const message = await deleteSong(songId)
     return res.redirect("/library/music")
 }
 
@@ -81,5 +85,6 @@ export {
     getUpdateUserPage, postUpdateUser,
     getCreateSongPage, postCreateSong, 
     getUpdateSongPage, postUpdateSong,
+    handleDeleteSong,
     getAddArtistPage, postAddArtist
 }

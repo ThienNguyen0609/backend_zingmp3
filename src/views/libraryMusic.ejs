@@ -35,13 +35,13 @@
     }
 </style>
 
-<!-- <script>
+<script>
     $(document).ready(function () {
         $(".btnDelete").click(function () {
             const id = $(this).attr('data-id');
             if (confirm(`Are you sure to delete this tutorial, id = ${id}`)) {
                 $.ajax({
-                    url: `${window.location.origin}/api/tutorials/${id}`,
+                    url: `${window.location.origin}/library/music/delete/${id}`,
                     method: "DELETE",
                     success: (result) => {
                         console.log(result);
@@ -56,7 +56,7 @@
             }
         });
     });
-</script> -->
+</script>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">

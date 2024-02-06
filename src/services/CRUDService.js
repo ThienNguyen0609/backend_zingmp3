@@ -2,6 +2,8 @@ import db from '../models/index';
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
 
+let index = 74
+
 const hashUserPassword = (password) => {
     return new Promise(async (resolve, reject)=>{
         try {
@@ -141,7 +143,7 @@ const getAllSong = () => {
                     attributes: ["category"]
                 },
                 raw: true,
-                order: ['id']
+                order: [['id', "DESC"]]
             })
             if(songs) {
                 data.errorCode = 1
@@ -235,6 +237,22 @@ const updateSong = (data) => {
     })
 }
 
+const deleteSong = (songId) => {
+    return new Promise(async (resolve, reject)=>{
+        try {
+            await db.Songs.destroy({
+                where: {
+                    id: songId
+                }
+            })
+            resolve("ok, update complete")
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
 const getAllArtists = () => {
     return new Promise(async (resolve, reject)=>{
         try {
@@ -282,5 +300,6 @@ export {
     updateUser, deleteUser, createNewUser,
     getAllSong, addNewSong,
     getSongById, updateSong,
+    deleteSong,
     getAllArtists, addNewArtists
 }

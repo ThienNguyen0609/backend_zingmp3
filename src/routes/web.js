@@ -5,6 +5,7 @@ import {
     getUpdateUserPage, postUpdateUser,
     getCreateSongPage, postCreateSong, 
     getUpdateSongPage, postUpdateSong,
+    handleDeleteSong,
     getAddArtistPage, postAddArtist
 } from '../controllers/CRUDControler'
 const router = express.Router()
@@ -19,6 +20,8 @@ const initWebRouter = (app) => {
 
     router.get('/library/music/update/:id', getUpdateSongPage)
     router.post('/library/music/update', postUpdateSong)
+    
+    router.delete('/library/music/delete/:songId', handleDeleteSong)
 
     router.get('/users/create', getCreateUserPage)
     router.post('/users/create', postCreateUser)
