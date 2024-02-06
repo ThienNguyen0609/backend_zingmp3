@@ -126,6 +126,8 @@ const handleLogin = async (req, res) => {
     }
     const data = await handleUserLogin(userName, password)
 
+    console.log(data)
+
     if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
     return res.status(200).json(data)
 }
