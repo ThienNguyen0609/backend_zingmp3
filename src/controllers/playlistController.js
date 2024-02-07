@@ -22,6 +22,7 @@ const handleGetPlaylist = async (req, res) => {
 const handleGetPlaylistSong = async (req, res) => {
     const {playlistId, userId} = req.params
     const response = await getPlaylistSong(playlistId, userId)
+    console.log("get playlist song:", response)
     if(!response.errorCode) return res.status(500).json(response)
     return res.status(200).json(response)
 }

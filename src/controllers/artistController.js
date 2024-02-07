@@ -5,6 +5,7 @@ import {
 
 const getApiAllArtists = async (req, res) => {
     const artists = await getAllArtists()
+    console.log("artists: ", artists)
     return res.send(artists)
 }
 
