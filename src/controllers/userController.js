@@ -19,8 +19,7 @@ const handleChangePassword = async (req, res) => {
 }
 
 const handleCheckUserPermission = async (req, res) => {
-    const songId = req.body.songId
-    const userId = req.body.userId
+    const {songId, userId} = req.body
 
     const data = await checkUserPermission(songId, userId)
     console.log(data)

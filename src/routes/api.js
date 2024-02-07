@@ -47,7 +47,8 @@ const initApiRouter = (app) => {
     router.post('/user/register', handleRegister)
     router.post('/user/login', handleLogin)
     router.post('/user/logout', handleLogout)
-    router.post('/user/permission', checkAuthority, handleCheckUserPermission)
+    // router.post('/user/permission', checkAuthority, handleCheckUserPermission)
+    router.post('/user/permission', handleCheckUserPermission)
 
     // forgot password
     router.post('/user/check-send-email', handleCheckUser, handleSendEmail)
