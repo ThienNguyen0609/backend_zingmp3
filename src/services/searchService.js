@@ -1,15 +1,16 @@
 import { Op } from "sequelize"
-import db from "../models"
+import db, { sequelize } from "../models"
 
-const findSong = async (value) => {
+const findSong = async (search) => {
     return new Promise(async (resolve, reject)=>{
         try{
             const songSearched = await db.Songs.findAll({
-                where: {
-                    name: {
-                        [Op.like]: `%${value}%`
-                    }
-                },
+                // where: {
+                //     name: {
+                //         [Op.like]: `%${value}%`
+                //     }
+                // },
+                where: sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), {[Op.like]: `%${search}%`}),
                 limit: 5,
                 raw: true
             })
