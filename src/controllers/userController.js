@@ -20,14 +20,11 @@ const handleChangePassword = async (req, res) => {
 
 const handleCheckUserPermission = async (req, res) => {
     const {songId, userId} = req.body
-
     const data = await checkUserPermission(songId, userId)
-    console.log(data)
     return res.status(200).json(data)
 }
 
 const handleCheckUser = async (req, res, next) => {
-    console.log(req.body.usernameOrEmail)
     const {usernameOrEmail} = req.body
     const response = await handleCheckUserByUsernameOrEmail(usernameOrEmail)
     if(response.errorCode) {
@@ -130,12 +127,7 @@ const handleLogin = async (req, res) => {
     }
     const data = await handleUserLogin(userName, password)
 
-    console.log(data)
-
-    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {sameSite : "none",
-    secure: true,
-    domain: "https://frontend-zingmp3.vercel.app",
-    httpOnly: true});
+    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {httpOnly: true});
     return res.status(200).json(data)
 }
 
@@ -163,13 +155,11 @@ const handleLogout = (req, res) => {
 
 const handleGet = async (req, res) => {
     const response = await handleGetUser(req.params.id)
-    console.log(response)
     if(response.errorCode) return res.status(200).json(response)
     return res.status(500).json(response)
 }
 
 const handleUpdate = async (req, res) => {
-    console.log(req.body)
     const response = await handleUpdateUser(req.body.user)
     return res.status(200).json(response)
 }

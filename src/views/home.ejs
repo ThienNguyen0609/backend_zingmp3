@@ -90,8 +90,6 @@
                 <th>STT</th>
                 <th>username</th>
                 <th>email</th>
-                <th>country</th>
-                <th>gender</th>
                 <th>action</th>
             </thead>
             <% Users.forEach((user, index) => { %>
@@ -104,12 +102,6 @@
                     </td>
                     <td>
                         <%= user.email %>
-                    </td>
-                    <td>
-                        <%= user.Country %>
-                    </td>
-                    <td>
-                        <%= user.Gender %>
                     </td>
                     <td>
                         <a class="btn btn-dark" href="/user/update/<%=user.id%>">Edit</a>

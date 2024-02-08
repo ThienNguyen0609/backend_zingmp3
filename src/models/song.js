@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.Playlists, {
         through: models.PlaylistSongs
       })
+      this.hasOne(models.Users)
     }
   }
   Song.init({

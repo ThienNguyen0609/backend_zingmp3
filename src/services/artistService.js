@@ -4,8 +4,21 @@ import db from "../models"
 const getAllArtists = () => {
     return new Promise(async (resolve, reject)=>{
         try{
-            const artists = await db.Artists.findAll();
-            resolve(artists)
+            let data = {}
+            const artists = await db.Artists.findAll({
+                raw: true
+            });
+            if(artists) {
+                data.errorCode = 1
+                data.message = "get artist success"
+                data.artists = artists
+            }
+            else {
+                data.errorCode = 0
+                data.message = "get artist error"
+                data.artists = []
+            }
+            resolve(data)
         }
         catch(err) {
             reject(err)
@@ -17,7 +30,7 @@ const getArtistInfo = (artistName) => {
     return new Promise(async (resolve, reject)=>{
         try{
             let data = {}
-            const checkSong = await db.Songs.findAll({
+            const songs = await db.Songs.findAll({
                 where: {
                     actor: {
                         [Op.like]: `%${artistName}%`
@@ -30,20 +43,25 @@ const getArtistInfo = (artistName) => {
                 raw: true,
                 order: ["id"]
             })
-            const checkArtist = await db.Artists.findOne({
+            const artist = await db.Artists.findOne({
                 where: {
                     name: artistName
                 },
                 raw: true
             })
-            if(checkSong && checkArtist) {
-                data.artistName = checkArtist.name
-                data.artistImage = checkArtist.image
-                data.songs = checkSong
-
-                resolve(data)
+            if(songs && artist) {
+                data.errorCode = 1
+                data.message = "get success!"
+                data.artist = artist
+                data.songs = songs
             }
-            else resolve(data)
+            else {
+                data.errorCode = 0
+                data.message = "get error!"
+                data.artist = []
+                data.songs = []
+            }
+            resolve(data)
         }   
         catch(err) {
             reject(err)

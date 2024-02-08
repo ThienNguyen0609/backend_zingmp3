@@ -19,9 +19,8 @@ import {
 } from '../controllers/searchController'
 
 import {
-    getApiAllSong,
-    getApiSongItem,
-    updateApiSong
+    handleGetAllSong,
+    handleGetCurrentSong
 } from '../controllers/songController'
 
 import {
@@ -42,7 +41,8 @@ const router = express.Router()
 const initApiRouter = (app) => {
 
     router.get('/user/get/:id', handleGet)
-    router.put('/user/update', checkAuthority, handleUpdate)
+    // router.put('/user/update', checkAuthority, handleUpdate)
+    router.put('/user/update', handleUpdate)
     router.post('/user/authenticated', checkAuthenticated)
     router.post('/user/register', handleRegister)
     router.post('/user/login', handleLogin)
@@ -55,23 +55,25 @@ const initApiRouter = (app) => {
     router.post('/user/OTP-verify', handleVerifyOTP)
     router.post('/user/change-password', handleChangePassword)
 
-    router.get('/library/music', getApiAllSong)
-    router.get('/library/music/:id', getApiSongItem)
-    router.put('/library/music', updateApiSong)
 
+    //song
+    router.get('/song', handleGetAllSong)
+    router.get('/song/current/get/:userId', handleGetCurrentSong)
+
+    //playlist
     router.post('/playlist/create', handleCreatePlaylist)
     router.get('/playlist/get/:id', handleGetPlaylist)
     router.get('/playlist/get/item/:playlistId/:userId', handleGetPlaylistSong)
     router.post('/playlist/add', handleAddToPlaylist)
     router.post('/playlist/remove', handleRemoveFromPlaylist)
 
+    //search
     router.post('/search', findApiSong)
     router.post('/search/all', findApiAllSong)
 
+    // get artist
     router.get('/artist', getApiAllArtists)
     router.get('/artist/:artistName', getArtistByName)
-
-    // router.get('song/play', )
 
     app.use('/api', router)
 }

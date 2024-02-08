@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasOne(models.Playlists)
       this.belongsTo(models.Categories)
+      this.belongsTo(models.Songs)
     }
   }
   User.init({

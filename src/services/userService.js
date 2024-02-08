@@ -157,7 +157,7 @@ const handleGetUser = async (userId) => {
                     email: user.email,
                     role: user.role,
                     category: {
-                        categoryId: user.categoryId,
+                        categoryId: user.CategoryId,
                         type: user["Category.category"]
                     },
                     dateofbirth: user.dateofbirth,
@@ -197,7 +197,7 @@ const handleUpdateUser = async (userRequest) => {
             const user = await db.Users.findByPk(userRequest.id, {
                 raw: true,
                 include: {
-                    model: Categories,
+                    model: db.Categories,
                     attributes: ["category"]
                 }
             })
@@ -286,7 +286,6 @@ const handleUserLogin = (userName, password) => {
                         attributes: ["category"]
                     }
                 })
-                console.log(user)
                 const isCorrectPassword = bcrypt.compareSync(password, user.password);
                 if(isCorrectPassword) {
                     const token = createJWT({userName: user.username, email: user.email})
@@ -364,7 +363,11 @@ const checkUserPermission = (songId, userId) => {
                     attributes: ["category"]
                 } 
             })
-            console.log("userCatId:", userCatId.CategoryId, "songCatId:", songCatId.SongCategoryId)
+            await db.Users.update({SongId: songId}, {
+                where: {
+                    id: userId
+                }
+            })
             if(userCatId.CategoryId >= songCatId.SongCategoryId) {
                 data.errorCode = 1
                 data.message = "Can play song"

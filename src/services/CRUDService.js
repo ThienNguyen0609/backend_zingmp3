@@ -20,14 +20,11 @@ const getAllUsers = () => {
     return new Promise(async (resolve, reject)=>{
         try {
             const users = await db.Users.findAll({
-                // offset: 4,
-                // limit: 4,
                 attributes: {
                     exclude: ["password"]
                 },
                 raw: true
             })
-            // console.log(users)
             resolve(users)
         }
         catch(err) {
@@ -85,7 +82,6 @@ const getUserById = (userId) => {
                 raw: true
             })
             delete user.password
-            console.log("user: ",user)
             resolve(user)
         }
         catch {
@@ -143,7 +139,7 @@ const getAllSong = () => {
                     attributes: ["category"]
                 },
                 raw: true,
-                order: [['id', "DESC"]]
+                order: ['id']
             })
             if(songs) {
                 data.errorCode = 1

@@ -4,18 +4,14 @@ import {
 } from "../services/artistService"
 
 const getApiAllArtists = async (req, res) => {
-    const artists = await getAllArtists()
-    console.log("artists: ", artists)
-    return res.send(artists)
+    const response = await getAllArtists()
+    return res.status(200).json(response)
 }
 
 const getArtistByName = async (req, res) => {
     const artistName = req.params.artistName.split("-").join(" ")
-    const data = await getArtistInfo(artistName)
-    return res.status(200).send({
-        message: "ok",
-        artistInfo: data
-    })
+    const response = await getArtistInfo(artistName)
+    return res.status(200).json(response)
 }
 
 export {
