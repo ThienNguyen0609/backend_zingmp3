@@ -1,4 +1,4 @@
-import { getAllSong, getCurrentSong, updateCurrentSong } from "../services/songService"
+import { getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong } from "../services/songService"
 
 const handleGetAllSong = async (req, res) => {
     const response = await getAllSong()
@@ -12,7 +12,21 @@ const handleGetCurrentSong = async (req, res) => {
     return res.status(200).json(response)
 }
 
+const handleGetFavoriteSong = async (req, res) => {
+    const {userId} = req.params
+    const response = await getFavoriteSong(userId)
+    return res.status(200).json(response)
+}
+
+const handleUpdateFavoriteSong = async (req, res) => {
+    const {userId, favorSongIds} = req.body
+    const response = await updateFavoriteSong(userId, favorSongIds)
+    return res.status(200).json(response)
+}
+
 export {
     handleGetAllSong,
-    handleGetCurrentSong
+    handleGetCurrentSong,
+    handleGetFavoriteSong,
+    handleUpdateFavoriteSong
 }

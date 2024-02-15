@@ -1,3 +1,4 @@
+import { reject } from 'lodash';
 import db from '../models/index';
 
 const getAllSong = () => {
@@ -68,6 +69,68 @@ const getCurrentSong = async (userId) => {
     })
 }
 
+const getFavoriteSong = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try{
+            let data = {}
+            const user = await db.Users.findOne({
+                where: {
+                    id: userId
+                }
+            })
+            const songs = await db.Songs.findAll({
+                where: {
+                    id: user.favoriteSongId
+                },
+                include: {
+                    model: db.SongCategories,
+                    attributes: ["category"]
+                },
+                raw: true,
+            })
+            // await db.Users.update({favoriteSongId: [1, 5, 3, 23, 50]}, {
+            //     where: {
+            //         id: 1
+            //     }
+            // })
+            if(songs) {
+                data.errorCode = 1
+                data.message = "get success!"
+                data.songs = songs
+            }
+            else {
+                data.errorCode = 0
+                data.message = "get error!"
+                data.songs = []
+            }
+            resolve(data)
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
+const updateFavoriteSong = (userId, favorSongIds) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await db.Users.update({favoriteSongId: favorSongIds}, {
+                where: {
+                    id: userId
+                }
+            })
+            const data = {
+                errorCode: 1,
+                message: "success!"
+            }
+            resolve(data)
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
 export {
-    getAllSong, getCurrentSong
+    getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong
 }

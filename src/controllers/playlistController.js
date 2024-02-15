@@ -3,11 +3,18 @@ import {
     addSongToPlaylist,
     removeSongFromPlaylist,
     createPlaylist,
-    getPlaylistSong
+    getPlaylistSong,
+    deletePlaylist
 } from '../services/playlistService'
 
 const handleCreatePlaylist = async (req, res) => {
     const response = await createPlaylist(req.body)
+    return res.status(200).json(response)
+}
+
+const handleDeletePlaylist = async (req, res) => {
+    const {userId, playlistId} = req.body
+    const response = await deletePlaylist(userId, playlistId)
     return res.status(200).json(response)
 }
 
@@ -37,6 +44,6 @@ const handleRemoveFromPlaylist = async (req, res) => {
 }
 
 export {
-    handleGetPlaylistSong,
+    handleGetPlaylistSong, handleDeletePlaylist,
     handleCreatePlaylist, handleGetPlaylist, handleAddToPlaylist, handleRemoveFromPlaylist
 }

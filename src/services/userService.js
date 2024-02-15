@@ -162,7 +162,8 @@ const handleGetUser = async (userId) => {
                     },
                     dateofbirth: user.dateofbirth,
                     gender: user.gender,
-                    country: user.country
+                    country: user.country,
+                    favoritesongid: user.favoriteSongId
                 }
             }
             else {

@@ -1,3 +1,4 @@
+import _ from "lodash"
 import db from "../models"
 import { Op } from "sequelize"
 
@@ -24,6 +25,40 @@ const createPlaylist = (request) => {
                 data.message = "name playlist has been in your playlist"
             }
 
+            resolve(data)
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
+const deletePlaylist = (userId, playlistId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = {}
+            const playlistSong = await db.PlaylistSongs.findAll({
+                where: {
+                    PlaylistId: playlistId
+                },
+                raw: true
+            })
+            if(playlistSong && !_.isEmpty(playlistSong)) {
+                console.log("ok")
+                await db.PlaylistSongs.destroy({
+                    where: {
+                        PlaylistId: playlistId
+                    }
+                })
+            }
+            
+            await db.Playlists.destroy({
+                where: {
+                    [Op.and] : [{id: playlistId}, {UserId: userId}]
+                }
+            })
+            data.errorCode = 1
+            data.message = "delete playlist success!"
             resolve(data)
         }
         catch(err) {
@@ -160,6 +195,6 @@ const removeSongFromPlaylist = (playlistId, songId) => {
 }
 
 export {
-    createPlaylist, getPlaylist, getPlaylistSong,
+    createPlaylist, deletePlaylist, getPlaylist, getPlaylistSong,
     addSongToPlaylist, removeSongFromPlaylist
 }
