@@ -22,15 +22,11 @@ const findSong = async (search) => {
     })
 }
 
-const findAllSong = (value) => {
+const findAllSong = (search) => {
     return new Promise(async (resolve, reject)=>{
         try{
             const songSearched = await db.Songs.findAll({
-                where: {
-                    name: {
-                        [Op.like]: `%${value}%`
-                    }
-                },
+                where: sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), {[Op.like]: `%${search}%`}),
                 include: {
                     model: db.SongCategories,
                     attributes: ["category"]
