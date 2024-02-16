@@ -44,14 +44,14 @@ const router = express.Router()
 const initApiRouter = (app) => {
 
     router.get('/user/get/:id', handleGet)
-    // router.put('/user/update', checkAuthority, handleUpdate)
-    router.put('/user/update', handleUpdate)
+    router.put('/user/update', checkAuthority, handleUpdate)
+    // router.put('/user/update', handleUpdate)
     router.post('/user/authenticated', checkAuthenticated)
     router.post('/user/register', handleRegister)
     router.post('/user/login', handleLogin)
     router.post('/user/logout', handleLogout)
-    // router.post('/user/permission', checkAuthority, handleCheckUserPermission)
-    router.post('/user/permission', handleCheckUserPermission)
+    router.post('/user/permission', checkAuthority, handleCheckUserPermission)
+    // router.post('/user/permission', handleCheckUserPermission)
 
     // forgot password
     router.post('/user/check-send-email', handleCheckUser, handleSendEmail)

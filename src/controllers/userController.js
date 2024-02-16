@@ -63,10 +63,9 @@ const handleVerifyOTP = (req, res) => {
 
 const checkAuthority = (req, res, next) => {
     const cookies = req.cookies
-    const userId = req.body.userId
     console.log(cookies)
-    if(cookies && cookies[`jwt${userId}`]) {
-        const token = cookies[`jwt${userId}`]
+    if(cookies && cookies['jwt']) {
+        const token = cookies['jwt']
         const decoded = verifyToken(token)
         console.log(decoded)
         if(decoded) {
@@ -87,10 +86,9 @@ const checkAuthority = (req, res, next) => {
 
 const checkAuthenticated = (req, res) => {
     const cookies = req.cookies
-    const userId = req.body.userId
-    console.log(cookies[`jwt${userId}`])
-    if(cookies && cookies[`jwt${userId}`]) {
-        const token = cookies[`jwt${userId}`]
+    console.log(cookies['jwt'])
+    if(cookies && cookies['jwt']) {
+        const token = cookies['jwt']
         const decoded = verifyToken(token)
 
         if(decoded) {
