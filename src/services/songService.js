@@ -88,11 +88,6 @@ const getFavoriteSong = (userId) => {
                 },
                 raw: true,
             })
-            // await db.Users.update({favoriteSongId: [1, 5, 3, 23, 50]}, {
-            //     where: {
-            //         id: 1
-            //     }
-            // })
             if(songs) {
                 data.errorCode = 1
                 data.message = "get success!"
