@@ -127,10 +127,10 @@ const handleLogin = async (req, res) => {
     }
     const data = await handleUserLogin(userName, password)
 
-    if(data.errorCode) res.cookie(`jwt${data.data.id}`, data.accessToken, {
+    if(data.errorCode) res.cookie('jwt', data.accessToken, {
         sameSite: "none",
         secure: true,
-        domain: "https://backend-zingmp3-project.onrender.com",
+        domain: "backend-zingmp3-project.onrender.com",
         httpOnly: true
     });
     return res.status(200).json(data)
