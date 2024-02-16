@@ -6,6 +6,10 @@ const handleGetAllSong = async (req, res) => {
     return res.status(200).json(response)
 }
 
+const handleAddSongToLib = async (req, res) => {
+    return res.status(200).json("ok")
+}
+
 const handleGetCurrentSong = async (req, res) => {
     const {userId} = req.params
     const response = await getCurrentSong(userId)
@@ -26,6 +30,7 @@ const handleUpdateFavoriteSong = async (req, res) => {
 
 export {
     handleGetAllSong,
+    handleAddSongToLib,
     handleGetCurrentSong,
     handleGetFavoriteSong,
     handleUpdateFavoriteSong

@@ -20,6 +20,7 @@ import {
 
 import {
     handleGetAllSong,
+    handleAddSongToLib,
     handleGetCurrentSong,
     handleGetFavoriteSong,
     handleUpdateFavoriteSong
@@ -61,6 +62,7 @@ const initApiRouter = (app) => {
 
     //song
     router.get('/song', handleGetAllSong)
+    router.post('/song/library/create', handleAddSongToLib)
     router.get('/song/current/get/:userId', handleGetCurrentSong)
     router.get('/song/favorite/get/:userId', handleGetFavoriteSong)
     router.post('/song/favorite/update', handleUpdateFavoriteSong)

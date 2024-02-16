@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { verifyToken } from "../middleware/JWTAction"
 import { 
     checkUserPermission, 
@@ -125,10 +126,12 @@ const handleLogin = async (req, res) => {
     }
     const data = await handleUserLogin(userName, password)
 
+    console.log(process.env.TOKEN_HANLER_DOMAIN)
+
     if(data.errorCode) res.cookie('jwt', data.accessToken, {
         sameSite: "none",
         secure: true,
-        domain: "backend-zingmp3-project.onrender.com",
+        domain: process.env.TOKEN_HANLER_DOMAIN,
         httpOnly: true
     });
     return res.status(200).json(data)
