@@ -62,7 +62,7 @@ const initApiRouter = (app) => {
 
     //song
     router.get('/song', handleGetAllSong)
-    router.post('/song/library/create', handleAddSongToLib)
+    router.post('/song/library/addtolib', handleAddSongToLib)
     router.get('/song/current/get/:userId', handleGetCurrentSong)
     router.get('/song/favorite/get/:userId', handleGetFavoriteSong)
     router.post('/song/favorite/update', handleUpdateFavoriteSong)

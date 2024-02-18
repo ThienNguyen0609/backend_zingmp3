@@ -126,6 +126,24 @@ const updateFavoriteSong = (userId, favorSongIds) => {
     })
 }
 
+const addSongToLib = (song) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await db.Songs.bulkCreate(song)
+
+            const data = {
+                errorCode: 1,
+                message: "Add to library success!"
+            }
+
+            resolve(data)
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}
+
 export {
-    getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong
+    getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong, addSongToLib
 }

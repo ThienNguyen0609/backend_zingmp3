@@ -1,13 +1,15 @@
-import { getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong } from "../services/songService"
+import { addSongToLib, getAllSong, getCurrentSong, getFavoriteSong, updateFavoriteSong } from "../services/songService"
 
 const handleGetAllSong = async (req, res) => {
     const response = await getAllSong()
     if(!response.errorCode) return res.status(500).json(response)
-    return res.status(200).json(response)
+    return res.status(200).send(response)
 }
 
 const handleAddSongToLib = async (req, res) => {
-    return res.status(200).json("ok")
+    const {song} = req.body
+    const response = await addSongToLib(song)
+    return res.status(200).json(response)
 }
 
 const handleGetCurrentSong = async (req, res) => {
